@@ -1,0 +1,310 @@
+package screen;
+
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.security.MessageDigest;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+import javax.swing.border.MatteBorder;
+
+import encryption.SHA256Encryption;
+
+public class LoginScreen extends JFrame {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JTextField loginUsername;
+	private JPasswordField loginPassword;
+	JLabel lblWarningImage;
+	JTextField wrongWarning;
+	JTextField emptyWarning;
+	JTextField connectingProceed;
+	MessageDigest digestor;
+	boolean warningDisplay = false;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					LoginScreen frame = new LoginScreen();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	
+	/**
+	 * Creating the central page
+	 */
+	private void createCenter() {
+		//Setting window properties
+		setTitle("Login Screen");
+		setResizable(false);
+		setIconImage(Toolkit.getDefaultToolkit().getImage(LoginScreen.class.getResource("/images/login.png")));
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 920, 630);
+		
+		//Creating Pane
+		contentPane = new JPanel();
+		contentPane.setBackground(new Color(255, 255, 255));
+		contentPane.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		
+		JLabel lblNewLabel = new JLabel("Login");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setForeground(new Color(255, 128, 0));
+		lblNewLabel.setFont(new Font("Sylfaen", Font.BOLD, 65));
+		lblNewLabel.setBounds(614, 231, 240, 80);
+		contentPane.add(lblNewLabel);
+		
+		
+		loginUsername = new JTextField();
+		loginUsername.setHorizontalAlignment(SwingConstants.LEFT);
+		loginUsername.setBounds(715, 314, 158, 20);
+		contentPane.add(loginUsername);
+		loginUsername.setColumns(10);
+		
+		
+		loginPassword = new JPasswordField();
+		loginPassword.setBounds(715, 346, 158, 20);
+		contentPane.add(loginPassword);
+		
+		
+		JLabel lblUsername = new JLabel("Username:");
+		lblUsername.setFont(new Font("MS Gothic", Font.BOLD, 20));
+		lblUsername.setBounds(607, 314, 96, 20);
+		contentPane.add(lblUsername);
+		
+		
+		JLabel lblPassword = new JLabel("Password:");
+		lblPassword.setFont(new Font("MS Gothic", Font.BOLD, 20));
+		lblPassword.setBounds(607, 346, 96, 20);
+		contentPane.add(lblPassword);
+		
+		//Creating the image 
+		JLabel lblImage = new JLabel("");
+		Image image = new ImageIcon(System.getProperty("user.dir").toString() + "\\src\\images\\ant english.jpg").getImage();
+		lblImage.setIcon(new ImageIcon(image));
+		lblImage.setBounds(86, 116, 400, 400);
+		contentPane.add(lblImage);
+		
+		
+		JButton btnLoginButton = new JButton("Login");
+		btnLoginButton.addMouseListener(new LoginHandler());
+		btnLoginButton.setHorizontalAlignment(SwingConstants.LEADING);
+		btnLoginButton.setFont(new Font("Sylfaen", Font.BOLD, 20));
+		btnLoginButton.setForeground(new Color(255, 128, 0));
+		btnLoginButton.setBackground(new Color(255, 255, 255));
+		btnLoginButton.setBounds(785, 375, 88, 37);
+		contentPane.add(btnLoginButton);
+		
+		connectingProceed = new JTextField("");
+		connectingProceed.setFont(new Font("Sylfaen", Font.BOLD, 12));
+		connectingProceed.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		connectingProceed.setHorizontalAlignment(SwingConstants.RIGHT);
+		connectingProceed.setBounds(610, 458, 288, 26);
+		contentPane.add(connectingProceed);
+		
+		lblWarningImage = new JLabel("");
+		Image image1 = new ImageIcon(System.getProperty("user.dir").toString() + "\\src\\images\\false.png").getImage();
+		lblWarningImage.setIcon(new ImageIcon(image1));
+		lblWarningImage.setBounds(565, 385, 190, 37);
+		lblWarningImage.setVisible(false);
+		contentPane.add(lblWarningImage);
+	}
+	
+	private void authenticationVerification(String username, String password) throws WrongPasswordWarning, InterruptedException {
+		String usernameHash = SHA256Encryption.encrypt(username);
+		String passwordHash = SHA256Encryption.encrypt(password);
+		if (passwordHash.equals("536b3e0bf378d4a1075fadf9e821c0efdb3fbacdc5dccfb7c282a25b2ade1e94") 
+				&& usernameHash.equals("8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918")) {
+			if (warningDisplay == true) {
+				lblWarningImage.setVisible(false);
+				wrongWarning.setText("");	
+			}
+			
+			System.out.println("Connect Successful!");
+			try {
+				JFrame frame = new JFrame("Login Success");
+			    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			    frame.setSize(400, 150);
+			    frame.setLocationRelativeTo(null);
+			    frame.add(new MessagePanel());
+			    frame.setVisible(true);
+			    if (!frame.isVisible()) {
+			    	dispose();
+				    StudentScreen studentScreen = new StudentScreen();
+				    studentScreen.setVisible(true);
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		else {
+			warningDisplay = true;
+			throw new WrongPasswordWarning();
+		}
+	}
+	
+	
+	private class LoginHandler implements MouseListener {
+		public void mousePressed(MouseEvent e) {
+			if (e.getButton() == MouseEvent.BUTTON1) {
+				try {
+					String userName = loginUsername.getText().strip();
+					String password = String.valueOf(loginPassword.getPassword()).strip();
+					if (userName == "" || password == "") {
+						warningDisplay = true;
+						throw new EmptyFieldWarning();
+					}
+					else {
+						// call the authentication center
+						authenticationVerification(userName, password);
+						
+						// make the warning disappear if both fields are filled in correctly
+						if (warningDisplay == true) {
+							lblWarningImage.setVisible(false);
+							emptyWarning.setText("");	
+						}
+					}
+				}
+				catch(Exception ex) {
+					System.out.print(ex);
+				}
+			}
+		}
+
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+	}
+	
+	
+	/**
+	 * will be thrown when login user name or password is missing
+	 */
+	private class EmptyFieldWarning extends Exception {
+		private static final long serialVersionUID = 1L;
+
+		public EmptyFieldWarning() {
+			/**
+			 * Creating the warning text
+			 */
+			emptyWarning = new JTextField("Both field must be filled with text!");
+			emptyWarning.setFont(new Font("Sylfaen", Font.BOLD, 12));
+			emptyWarning.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+			emptyWarning.setBounds(590, 390, 190, 37);
+			contentPane.add(emptyWarning);
+			
+			/** 
+			 * Making the warning label visible
+			 */
+			lblWarningImage.setVisible(true);
+			
+			System.out.println();
+		}
+	}
+	
+	/**
+	 * will be thrown when login username and password is incorrectly typed
+	 */
+	private class WrongPasswordWarning extends Exception {
+		private static final long serialVersionUID = 1L;
+
+		public WrongPasswordWarning() {
+			/**
+			 * Creating the warning text
+			 */
+			wrongWarning = new JTextField("Wrong username or password!");
+			wrongWarning.setFont(new Font("Sylfaen", Font.BOLD, 12));
+			wrongWarning.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+			wrongWarning.setBounds(590, 390, 190, 37);
+			contentPane.add(wrongWarning);
+			
+			/** 
+			 * Making the warning label visible
+			 */
+			lblWarningImage.setVisible(true);
+			
+			System.out.println();
+		}
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public LoginScreen() {
+		//Creating the frame
+		createCenter();	
+	}
+	
+	public class MessagePanel extends JPanel {
+		  /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		private JLabel messageLabel;
+		  private Timer timer;
+		  private int count = 5;
+
+		  public MessagePanel() {
+		    setLayout(new FlowLayout(FlowLayout.CENTER));
+		    messageLabel = new JLabel("Connected Successfully");
+		    add(messageLabel);
+		    timer = new Timer(1000, e -> {
+		      if (count > 0) {
+		        messageLabel.setText("Connected Successfully.\n Connect in " + count + " seconds");
+		        count--;
+		      } else {
+		        timer.stop();
+		      }
+		    });
+		    timer.start();
+		    if (count == 0) {
+		    	dispose();
+		    }
+		  }
+	}
+}

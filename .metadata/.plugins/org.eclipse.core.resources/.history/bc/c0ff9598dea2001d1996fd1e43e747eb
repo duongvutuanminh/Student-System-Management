@@ -1,0 +1,19 @@
+package data_population;
+
+public class PopulateData {
+	public static void main(String[] args) {
+	    try {
+	        if (args.length == 2) {
+	            int instanceNumber = Integer.parseInt(args[0]);
+	            boolean originalPopulate = Boolean.parseBoolean(args[1]);
+	            System.out.printf("Data receive:\nNumber of instance: %d\nPopulate from start: %d", instanceNumber, originalPopulate);
+	        } else {
+	            System.out.println("Please provide a single integer argument.");
+	        }
+	    } catch (NumberFormatException e) {
+	        System.out.println("The argument must be an integer.");
+	    }
+	    
+	    
+	}
+}
