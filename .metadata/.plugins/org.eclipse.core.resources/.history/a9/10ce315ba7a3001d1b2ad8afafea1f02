@@ -24,6 +24,7 @@ public class Student {
 
 	public Student(String name, int gender, int yob, String contactNumber, String parentName, String parentNumber,
 			String englishName) {
+		super();
 		this.name = name;
 		this.gender = gender;
 		this.yob = yob;

@@ -1,6 +1,7 @@
 package test;
 
 import java.util.List;
+import static org.junit.Assert.assertEquals;
 
 import jbdc_connection.JDBCUtils;
 import student.Student;
@@ -21,11 +22,6 @@ public class TestInsertStudent {
 
 	    // Clean up
 	    JDBCUtils.delete(stu);
-	}
-
-	private static boolean assertEquals(int expectedNumOfStudents, int actualNumOfStudents) {
-		System.out.print(expectedNumOfStudents == actualNumOfStudents);
-		return (expectedNumOfStudents == actualNumOfStudents);
 	}
 
 }

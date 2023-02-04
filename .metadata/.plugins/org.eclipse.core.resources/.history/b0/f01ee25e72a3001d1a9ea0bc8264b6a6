@@ -7,11 +7,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -141,71 +137,26 @@ public class LoginScreen extends JFrame {
 	}
 	
 	private void authenticationVerification(String username, String password) throws WrongPasswordWarning, InterruptedException {
-//		// creating a Message Digestor with SHA-256 algorithm
-//		try {
-//			digestor = MessageDigest.getInstance("SHA-256");
-//			
-//			// username hash
-//			byte[] usernameDigest = digestor.digest(username.getBytes(StandardCharsets.UTF_8));
-//			String usernameHash = new String(Base64.getEncoder().encode(usernameDigest));
-//			
-//			// password hash
-//			byte[] passwordDigest = digestor.digest(password.getBytes(StandardCharsets.UTF_8));
-//			String passwordHash = new String(Base64.getEncoder().encode(passwordDigest));
-//			
-//			// check the hash by the SHA-256 algorithm
-//			if (passwordHash.equals("NHLR6UsI1nPvbRJ4b8D8yOjy1IfhucsQqwY2nOg/DxM=") && usernameHash.equals("jGl25bVBBBW96Qi9Te4V37Fnqchz/Eu4qB9vKrRIqRg=")) {
-//				if (warningDisplay == true) {
-//					lblWarningImage.setVisible(false);
-//					wrongWarning.setText("");	
-//				}
-//				
-//				System.out.println("Connect Successful!");
-//				for (int i = 3; i > 0; i--) {
-//					TimeUnit.SECONDS.sleep(1);
-//					
-//					connectingProceed.setText(String.format("Connecting in ...%d", i));
-//				}
-//				try {
-//					StudentScreen frame = new StudentScreen();
-//					frame.setVisible(true);
-//				} catch (Exception ex) {
-//					ex.printStackTrace();
-//				}
-//				dispose();
-//			}
-//			else {
-//				warningDisplay = true;
-//				throw new WrongPasswordWarning();
-//			}
-//	
-//	
-//		} catch (NoSuchAlgorithmException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
 		String usernameHash = SHA256Encryption.encrypt(username);
 		String passwordHash = SHA256Encryption.encrypt(password);
-		if (passwordHash.equals("NHLR6UsI1nPvbRJ4b8D8yOjy1IfhucsQqwY2nOg/DxM=") && usernameHash.equals("jGl25bVBBBW96Qi9Te4V37Fnqchz/Eu4qB9vKrRIqRg=")) {
+		if (passwordHash.equals("536b3e0bf378d4a1075fadf9e821c0efdb3fbacdc5dccfb7c282a25b2ade1e94") 
+				&& usernameHash.equals("8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918")) {
 			if (warningDisplay == true) {
 				lblWarningImage.setVisible(false);
 				wrongWarning.setText("");	
 			}
 			
 			System.out.println("Connect Successful!");
-			for (int i = 3; i > 0; i--) {
-				TimeUnit.SECONDS.sleep(1);
-				
-				connectingProceed.setText(String.format("Connecting in ...%d", i));
-			}
 			try {
-				StudentScreen frame = new StudentScreen();
-				frame.setVisible(true);
+				MessagePane.main(null);
+				
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
 			dispose();
+		    StudentScreen studentScreen = new StudentScreen();
+		    studentScreen.setVisible(true);
+
 		}
 		else {
 			warningDisplay = true;
@@ -229,7 +180,7 @@ public class LoginScreen extends JFrame {
 						authenticationVerification(userName, password);
 						
 						// make the warning disappear if both fields are filled in correctly
-						if (warningDisplay == true) {
+						if (warningDisplay == true & emptyWarning.getText() != "") {
 							lblWarningImage.setVisible(false);
 							emptyWarning.setText("");	
 						}
@@ -319,5 +270,5 @@ public class LoginScreen extends JFrame {
 	public LoginScreen() {
 		//Creating the frame
 		createCenter();	
-	}
+	}		  
 }

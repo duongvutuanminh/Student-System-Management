@@ -36,24 +36,23 @@ public class JDBCUtils {
 	}
 	
 	public static void insert(Student stu) {
-	    String query = "insert into student(name, gender, yob, contact_number, english_name, parent_name, parent_number)" + 
-	                   " values(?, ?, ?, ?, ?, ?, ?)";
-	    try (Connection con = JDBCConnection.getJDBCConnection();
-	         PreparedStatement stmt = con.prepareStatement(query)) {
-	        stmt.setString(1, stu.getName());
-	        stmt.setInt(2, stu.getGender());
-	        stmt.setInt(3, stu.getYob());
-	        stmt.setString(4, stu.getContactNumber());
-	        stmt.setString(5, stu.getEnglishName());
-	        stmt.setString(6, stu.getParentName());
-	        stmt.setString(7, stu.getParentNumber());
-
-	        stmt.executeUpdate();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+		String query = String.format("insert into student(name, gender, yob, contact_number, english_name, parent_name, parent_number)"
+													      + " values(%s, %s, %d, %s, %s, %s, %s)", stu.getName(),
+																							   stu.getGender(),
+																							   stu.getYob(),
+																							   stu.getContactNumber(),
+																							   stu.getEnglishName(),
+																							   stu.getParentName(),
+																							   stu.getParentNumber()
+																							   );
+		try {
+			Connection con = JDBCConnection.getJDBCConnection();
+			Statement statement = con.createStatement();
+			statement.executeUpdate(query);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-
 	
 	public static void delete(Student stu) {
 		String query = "delete from student where name='" + stu.getName() + "'";

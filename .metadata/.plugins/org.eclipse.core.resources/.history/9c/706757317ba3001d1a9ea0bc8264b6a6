@@ -8,8 +8,11 @@ import student.Student;
 public class PopulateData {
 	static int instanceNumber;
     static boolean originalPopulate;
+    static JDBCUtils injector;
 	
     public static void main(String[] args) {
+    	injector = new JDBCUtils();
+    	
         if (args.length != 2) {
             System.out.println("Please provide two arguments: an integer and a boolean.");
             return;
@@ -34,9 +37,10 @@ public class PopulateData {
         System.out.println("Injecting succeed!");
     }
 
+	@SuppressWarnings("static-access")
 	private static void startPopulating(int instanceNumber, boolean originalPopulate) {
 		if (originalPopulate == true) {
-			JDBCUtils.deleteAll();
+			injector.deleteAll();
 		}
 		
 		Random random = new Random();
@@ -66,7 +70,7 @@ public class PopulateData {
 	        String contactNumber = "09" + random.nextInt(100000000);
 	        String parentNumber = "09" + random.nextInt(100000000);
 	        Student student = new Student(vietnamName, gender, yob, contactNumber, parentName, parentNumber, englishName);
-	        JDBCUtils.insert(student);
+	        injector.insert(student);
 	    }
 	}
 }

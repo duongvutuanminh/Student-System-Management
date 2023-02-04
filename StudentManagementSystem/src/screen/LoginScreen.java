@@ -178,9 +178,10 @@ public class LoginScreen extends JFrame {
 					else {
 						// call the authentication center
 						authenticationVerification(userName, password);
+						emptyWarning.setText("");
 						
 						// make the warning disappear if both fields are filled in correctly
-						if (warningDisplay == true) {
+						if (warningDisplay == true & emptyWarning.getText() != "") {
 							lblWarningImage.setVisible(false);
 							emptyWarning.setText("");	
 						}

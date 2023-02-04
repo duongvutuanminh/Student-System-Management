@@ -31,7 +31,6 @@ public class PopulateData {
         
         System.out.printf("Data received:\nNumber of instance: %d\nPopulate from start: %b\n", instanceNumber, originalPopulate);
         startPopulating(instanceNumber, originalPopulate);
-        System.out.println("Injecting succeed!");
     }
 
 	private static void startPopulating(int instanceNumber, boolean originalPopulate) {

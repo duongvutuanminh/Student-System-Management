@@ -355,7 +355,6 @@ public class StudentScreen extends JFrame {
 		public EmptyFieldWarning() {
 			 JFrame f=new JFrame();  
 			 JOptionPane.showMessageDialog(f,"You need to fill out at least 1 field: name, id or telephone number!");  
-			 
 		}
 	}
 }

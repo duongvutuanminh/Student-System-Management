@@ -24,8 +24,8 @@ public class TestInsertStudent {
 	}
 
 	private static boolean assertEquals(int expectedNumOfStudents, int actualNumOfStudents) {
-		System.out.print(expectedNumOfStudents == actualNumOfStudents);
 		return (expectedNumOfStudents == actualNumOfStudents);
+		
 	}
 
 }

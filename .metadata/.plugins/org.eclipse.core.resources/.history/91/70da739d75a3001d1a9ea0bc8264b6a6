@@ -6,15 +6,14 @@ import jbdc_connection.JDBCUtils;
 import student.Student;
 
 public class PopulateData {
-	static int instanceNumber;
-    static boolean originalPopulate;
-	
     public static void main(String[] args) {
         if (args.length != 2) {
             System.out.println("Please provide two arguments: an integer and a boolean.");
             return;
         }
         
+        int instanceNumber;
+        boolean originalPopulate;
         try {
             instanceNumber = Integer.parseInt(args[0]);
         } catch (NumberFormatException e) {
@@ -31,14 +30,9 @@ public class PopulateData {
         
         System.out.printf("Data received:\nNumber of instance: %d\nPopulate from start: %b\n", instanceNumber, originalPopulate);
         startPopulating(instanceNumber, originalPopulate);
-        System.out.println("Injecting succeed!");
     }
 
 	private static void startPopulating(int instanceNumber, boolean originalPopulate) {
-		if (originalPopulate == true) {
-			JDBCUtils.deleteAll();
-		}
-		
 		Random random = new Random();
 		
 		String[] firstNames = {
