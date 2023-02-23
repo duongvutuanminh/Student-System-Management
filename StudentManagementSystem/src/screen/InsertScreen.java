@@ -1,15 +1,23 @@
 package screen;
 
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.JTextField;
-import javax.swing.JButton;
 import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+
+import jbdc_connection.JDBCSStudentUtils;
+import student.Student;
 
 public class InsertScreen extends JFrame {
 
@@ -30,6 +38,7 @@ public class InsertScreen extends JFrame {
 	private JTextField textField_5;
 	private JLabel lblParentNumber;
 	private JTextField textField_6;
+	private ResourceBundle resourceBundle;
 
 	/**
 	 * Launch the application.
@@ -38,7 +47,7 @@ public class InsertScreen extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					InsertScreen frame = new InsertScreen();
+					InsertScreen frame = new InsertScreen(new Locale("vi", "VN"));
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -50,8 +59,11 @@ public class InsertScreen extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public InsertScreen() {
-		setTitle("Insert Student");
+	public InsertScreen(Locale interLocale) {
+		Locale.setDefault(interLocale);
+		resourceBundle = ResourceBundle.getBundle("resource_bundle_configs/resource_bundle");
+		
+		setTitle(resourceBundle.getString("student_insert_screen_title"));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(InsertScreen.class.getResource("/images/ant english.jpg")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 568, 271);
@@ -61,7 +73,7 @@ public class InsertScreen extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblName = new JLabel("Name (required)");
+		JLabel lblName = new JLabel(resourceBundle.getString("student_insert_name_field"));
 		lblName.setHorizontalAlignment(SwingConstants.CENTER);
 		lblName.setBounds(10, 11, 100, 20);
 		contentPane.add(lblName);
@@ -72,7 +84,7 @@ public class InsertScreen extends JFrame {
 		contentPane.add(textField);
 		textField.setColumns(10);
 		
-		JLabel lblGender = new JLabel("Gender");
+		JLabel lblGender = new JLabel(resourceBundle.getString("student_insert_gender_field"));
 		lblGender.setHorizontalAlignment(SwingConstants.CENTER);
 		lblGender.setBounds(10, 48, 100, 20);
 		contentPane.add(lblGender);
@@ -83,7 +95,7 @@ public class InsertScreen extends JFrame {
 		textField_1.setBounds(120, 48, 192, 20);
 		contentPane.add(textField_1);
 		
-		lblYOB = new JLabel("YOB");
+		lblYOB = new JLabel(resourceBundle.getString(("student_insert_yob_field")));
 		lblYOB.setHorizontalAlignment(SwingConstants.CENTER);
 		lblYOB.setBounds(10, 79, 100, 20);
 		contentPane.add(lblYOB);
@@ -94,7 +106,7 @@ public class InsertScreen extends JFrame {
 		textField_2.setBounds(120, 79, 192, 20);
 		contentPane.add(textField_2);
 		
-		lblContactNumber = new JLabel("Contact Number");
+		lblContactNumber = new JLabel(resourceBundle.getString(("student_insert_contactNo_field")));
 		lblContactNumber.setHorizontalAlignment(SwingConstants.CENTER);
 		lblContactNumber.setBounds(10, 110, 100, 20);
 		contentPane.add(lblContactNumber);
@@ -105,7 +117,7 @@ public class InsertScreen extends JFrame {
 		textField_3.setBounds(120, 110, 192, 20);
 		contentPane.add(textField_3);
 		
-		lblEnglishName = new JLabel("English Name");
+		lblEnglishName = new JLabel(resourceBundle.getString(("student_insert_englishName_field")));
 		lblEnglishName.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEnglishName.setBounds(10, 141, 100, 20);
 		contentPane.add(lblEnglishName);
@@ -116,7 +128,7 @@ public class InsertScreen extends JFrame {
 		textField_4.setBounds(120, 141, 192, 20);
 		contentPane.add(textField_4);
 		
-		lblParentName = new JLabel("Parent Name");
+		lblParentName = new JLabel(resourceBundle.getString(("student_insert_parentName_field")));
 		lblParentName.setHorizontalAlignment(SwingConstants.CENTER);
 		lblParentName.setBounds(10, 172, 100, 20);
 		contentPane.add(lblParentName);
@@ -127,7 +139,7 @@ public class InsertScreen extends JFrame {
 		textField_5.setBounds(120, 172, 192, 20);
 		contentPane.add(textField_5);
 		
-		lblParentNumber = new JLabel("Parent Number");
+		lblParentNumber = new JLabel(resourceBundle.getString(("student_insert_parentNumber_field")));
 		lblParentNumber.setHorizontalAlignment(SwingConstants.CENTER);
 		lblParentNumber.setBounds(10, 203, 100, 20);
 		contentPane.add(lblParentNumber);
@@ -138,8 +150,72 @@ public class InsertScreen extends JFrame {
 		textField_6.setBounds(120, 203, 192, 20);
 		contentPane.add(textField_6);
 		
-		JButton btnNewButton = new JButton("INSERT");
-		btnNewButton.setBounds(354, 185, 192, 38);
-		contentPane.add(btnNewButton);
+		JButton btnInsertButton = new JButton(resourceBundle.getString(("student_insert")));
+		btnInsertButton.setBounds(354, 185, 192, 38);
+		btnInsertButton.addMouseListener(new insertListener());
+		contentPane.add(btnInsertButton);
+	}
+	
+	private class insertListener implements MouseListener {
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+	        
+	        String name = textField.getText().strip();
+	        String genderStr = textField_1.getText().strip();
+	        String yobStr = textField_2.getText().strip();
+	        String contactNumber = textField_3.getText().strip();
+	        String englishName = textField_4.getText().strip();
+	        String parentName = textField_5.getText().strip();
+	        String parentNumber = textField_6.getText().strip();
+	        if (name.isEmpty() || parentName.isEmpty() || parentNumber.isEmpty()) {
+	            JOptionPane.showMessageDialog(null, resourceBundle.getString(("student_insert_lackOfFieldWarning")), resourceBundle.getString("error_label"), JOptionPane.ERROR_MESSAGE);
+	        } else {
+	            int gender = -1;
+	            if (genderStr.equalsIgnoreCase(resourceBundle.getString("lower_male"))) {
+	                gender = 0;
+	            } else if (genderStr.equalsIgnoreCase(resourceBundle.getString("lower_female"))) {
+	                gender = 1;
+	            } else {
+	                JOptionPane.showMessageDialog(null, resourceBundle.getString("student_insert_genderCheck"), resourceBundle.getString("error_label"), JOptionPane.ERROR_MESSAGE);
+	            }
+	            int yob = 0;
+	            try {
+	                yob = Integer.parseInt(yobStr);
+	            } catch (Exception e1) {
+	                JOptionPane.showMessageDialog(null, resourceBundle.getString("student_insert_yobMustBeInt"), resourceBundle.getString("error_label"), JOptionPane.ERROR_MESSAGE);
+	            }
+	            if (gender >= 0 && yob > 0) {
+	                Student student = new Student(name, gender, yob, contactNumber, parentName, parentNumber, englishName);
+	                JDBCSStudentUtils.insert(student);
+	                JOptionPane.showMessageDialog(null, resourceBundle.getString("student_insert_newStuToDB"), resourceBundle.getString("student_insert_successfullyInserted"), JOptionPane.INFORMATION_MESSAGE);
+	                dispose();
+	            }
+	        }
+	    }
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			
+			
+		}
+		
 	}
 }

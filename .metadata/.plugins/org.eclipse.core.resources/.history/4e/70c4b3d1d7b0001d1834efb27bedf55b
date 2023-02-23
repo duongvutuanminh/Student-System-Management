@@ -1,0 +1,41 @@
+package excel_operator;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import jbdc_connection.JDBCSStudentUtils;
+import student.Student;
+
+public class ExcelReader {
+	public static void readStudentsToDatabase(File inputFile) { 
+		try (FileInputStream file = new FileInputStream(inputFile)) {
+	        XSSFWorkbook workbook = new XSSFWorkbook(file);
+	        XSSFSheet sheet = workbook.getSheetAt(0);
+	        List<Student> students = new ArrayList<>();
+	        for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+	            XSSFRow row = sheet.getRow(i);
+	            if (row != null) {
+	            	Student stu = new Student();
+		            stu.setName(row.getCell(0).getStringCellValue());
+		            stu.setGender(row.getCell(1).getStringCellValue() == "Male" ? 0 : 1);
+		            stu.setYob((int) row.getCell(2).getNumericCellValue());
+		            stu.setContactNumber(row.getCell(3).getStringCellValue());
+		            stu.setEnglishName(row.getCell(4).getStringCellValue());
+		            stu.setParentName(row.getCell(5).getStringCellValue());
+		            stu.setParentNumber(row.getCell(6).getStringCellValue());
+		            students.add(stu);	
+	            }
+	        }
+	        JDBCSStudentUtils.insert(students);
+	        workbook.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+}

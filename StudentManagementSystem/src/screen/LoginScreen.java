@@ -8,6 +8,7 @@ import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.security.MessageDigest;
+import java.util.Locale;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -154,7 +155,7 @@ public class LoginScreen extends JFrame {
 				ex.printStackTrace();
 			}
 			dispose();
-		    StudentScreen studentScreen = new StudentScreen();
+		    StudentScreen studentScreen = new StudentScreen(new Locale("vi", "VN"));
 		    studentScreen.setVisible(true);
 
 		}
@@ -194,22 +195,22 @@ public class LoginScreen extends JFrame {
 		}
 
 		public void mouseClicked(MouseEvent e) {
-			// TODO Auto-generated method stub
+			
 			
 		}
 
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
+			
 			
 		}
 
 		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
+			
 			
 		}
 
 		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
+			
 			
 		}
 	}

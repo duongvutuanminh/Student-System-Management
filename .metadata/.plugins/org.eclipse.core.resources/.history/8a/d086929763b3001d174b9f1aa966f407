@@ -1,0 +1,278 @@
+package screen;
+
+import java.awt.EventQueue;
+import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+
+import decor.RoundedBorder;
+import jbdc_connection.JDBCClassUtils;
+import jbdc_connection.JDBCSStudentUtils;
+import jbdc_connection.JDBCStudentClassUtils;
+import student.Student;
+import student_class.StudentClass;
+
+public class InsertStudentClassScreen extends JFrame {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JTextField textField;
+	private JTextField textField_1;
+	private JLabel lblMidtermScore;
+	private JTextField textField_3;
+	private JLabel lblFinaltermScore;
+	private JTextField textField_4;
+	private JTextField textField_5;
+	private JTextField textField_6;
+	private int currentClassID;
+	private Student newlyCreatedStudentID;
+	private static Locale language;
+	private static ResourceBundle resourceBundle;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					InsertStudentClassScreen frame = new InsertStudentClassScreen(0, new Locale("vi", "VN"));
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public InsertStudentClassScreen(int classID, Locale interLocale) {
+		
+		language = interLocale;
+		if (language.toString().equalsIgnoreCase("en_US")) {
+			Locale.setDefault(new Locale("en", "US"));
+		}
+		else {
+			Locale.setDefault(new Locale("vi", "VN"));
+		}
+		resourceBundle = ResourceBundle.getBundle("resource_bundle_configs/resource_bundle");
+
+		currentClassID = classID;
+		newlyCreatedStudentID = new Student();
+		setTitle(resourceBundle.getString("enrolment_inserting_student_to_class") + " " + classID);
+		setIconImage(Toolkit.getDefaultToolkit().getImage(InsertScreen.class.getResource("/images/ant english.jpg")));
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 568, 271);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblName = new JLabel(resourceBundle.getString("class_row_name"));
+		lblName.setHorizontalAlignment(SwingConstants.CENTER);
+		lblName.setBounds(10, 11, 107, 20);
+		contentPane.add(lblName);
+		
+		textField = new JTextField();
+		textField.setHorizontalAlignment(SwingConstants.CENTER);
+		textField.setBounds(127, 11, 182, 20);
+		textField.setText(JDBCClassUtils.findByID(Integer.toString(classID)).getClassName());
+		textField.setEditable(false);
+		contentPane.add(textField);
+		textField.setColumns(10);
+		
+		JLabel lblStudentName = new JLabel(resourceBundle.getString("enrolment_row_student_name"));
+		lblStudentName.setHorizontalAlignment(SwingConstants.CENTER);
+		lblStudentName.setBounds(10, 48, 107, 20);
+		contentPane.add(lblStudentName);
+		
+		textField_1 = new JTextField();
+		textField_1.setHorizontalAlignment(SwingConstants.CENTER);
+		textField_1.setColumns(10);
+		textField_1.setBounds(127, 48, 182, 20);
+		contentPane.add(textField_1);
+		
+		lblMidtermScore = new JLabel(resourceBundle.getString("enrolment_row_midterm_score"));
+		lblMidtermScore.setHorizontalAlignment(SwingConstants.CENTER);
+		lblMidtermScore.setBounds(10, 79, 107, 20);
+		contentPane.add(lblMidtermScore);
+		
+		textField_3 = new JTextField();
+		textField_3.setHorizontalAlignment(SwingConstants.CENTER);
+		textField_3.setColumns(10);
+		textField_3.setBounds(127, 79, 182, 20);
+		contentPane.add(textField_3);
+		
+		lblFinaltermScore = new JLabel(resourceBundle.getString("enrolment_row_finalterm_score"));
+		lblFinaltermScore.setHorizontalAlignment(SwingConstants.CENTER);
+		lblFinaltermScore.setBounds(10, 110, 107, 20);
+		contentPane.add(lblFinaltermScore);
+		
+		textField_4 = new JTextField();
+		textField_4.setHorizontalAlignment(SwingConstants.CENTER);
+		textField_4.setColumns(10);
+		textField_4.setBounds(127, 110, 182, 20);
+		contentPane.add(textField_4);
+		
+		JButton btnInsertButton = new JButton(resourceBundle.getString("student_insert"));
+		btnInsertButton.setBounds(354, 155, 192, 38);
+		btnInsertButton.setBorder(new RoundedBorder(15));
+		btnInsertButton.addMouseListener(new insertListener());
+		contentPane.add(btnInsertButton);
+		
+		JLabel lblClassID = new JLabel(resourceBundle.getString("class_row_cid"));
+		lblClassID.setHorizontalAlignment(SwingConstants.LEFT);
+		lblClassID.setBounds(319, 11, 60, 20);
+		contentPane.add(lblClassID);
+		
+		textField_5 = new JTextField();
+		textField_5.setHorizontalAlignment(SwingConstants.CENTER);
+		textField_5.setColumns(10);
+		textField_5.setText(Integer.toString(classID));
+		textField_5.setEditable(false);
+		textField_5.setBounds(395, 11, 151, 20);
+		contentPane.add(textField_5);
+		
+		JLabel lblStudentID = new JLabel(resourceBundle.getString("enrolment_row_student_id"));
+		lblStudentID.setHorizontalAlignment(SwingConstants.LEFT);
+		lblStudentID.setBounds(319, 48, 66, 20);
+		contentPane.add(lblStudentID);
+		
+		textField_6 = new JTextField();
+		textField_6.setHorizontalAlignment(SwingConstants.CENTER);
+		textField_6.setColumns(10);
+		textField_6.setBounds(395, 48, 151, 20);
+		contentPane.add(textField_6);
+	}
+	
+	private class insertListener implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+		    // Get the values from the text fields
+		    String studentName = textField_1.getText().trim();
+		    String studentIDText = textField_6.getText().trim();
+		    String midScoreText = textField_3.getText().trim();
+		    String finalScoreText = textField_4.getText().trim();
+
+		    // Validate the student ID
+		    int studentID = 0;
+		    try {
+		        studentID = Integer.parseInt(studentIDText);
+		    } catch (NumberFormatException ex) {
+		        JOptionPane.showMessageDialog(null, resourceBundle.getString("enrolment_sid_int_check"));
+		        return;
+		    }
+		    if (studentID <= 0) {
+		        JOptionPane.showMessageDialog(null, resourceBundle.getString("enrolment_sid_pos_check"));
+		        return;
+		    }
+
+		    // Validate the scores
+		    int midScore;
+		    int finalScore;
+		    try {
+		        midScore = Integer.parseInt(midScoreText);
+		        finalScore = Integer.parseInt(finalScoreText);
+		    } catch (NumberFormatException ex) {
+		    	midScore = 0;
+		    	finalScore = 0;
+		    }
+		    if (midScore < 0 || midScore > 10 || finalScore < 0 || finalScore > 10) {
+		        JOptionPane.showMessageDialog(null, resourceBundle.getString("enrolment_mid_0_10"));
+		        return;
+		    }
+
+		    // Check that student name and ID are not empty
+		    if (studentName.isEmpty() || studentIDText.isEmpty()) {
+		        JOptionPane.showMessageDialog(null, resourceBundle.getString("enrolment_both_field_check"));
+		        return;
+		    }
+
+		    // Check that student name matches the ID in the SQL table
+		    try {
+		        boolean nameMatchesID = JDBCStudentClassUtils.checkStudentNameMatchesID(studentName, studentID);
+		        if (!nameMatchesID) {
+		            JOptionPane.showMessageDialog(null, resourceBundle.getString("enrolment_student_name_does_not_match"));
+		            int response = JOptionPane.showConfirmDialog(null, resourceBundle.getString("enrolment_ask_to_create_new_student"), resourceBundle.getString("enrolment_create_new_student"), JOptionPane.YES_NO_OPTION);
+		            if (response == JOptionPane.YES_OPTION) {
+		            	InsertScreen insertNewStudent = new InsertScreen(language);
+		            	insertNewStudent.setVisible(true);
+		            	insertNewStudent.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		            	insertNewStudent.addWindowListener(new WindowAdapter() {
+							  @Override
+							  public void windowClosed(WindowEvent e) {
+								  newlyCreatedStudentID = JDBCSStudentUtils.findLast();
+								  textField_1.setText(newlyCreatedStudentID.getName());
+						          textField_6.setText(Integer.toString(newlyCreatedStudentID.getId()));
+						          textField_1.setEditable(false);
+						          textField_6.setEditable(false);
+							  }
+							});
+		            }
+		            return;
+		        }
+		    } catch (Exception ex) {
+		        JOptionPane.showMessageDialog(null, resourceBundle.getString("enrolment_error_checking") + " " + ex.getMessage());
+		        ex.printStackTrace();
+		        return;
+		    }
+		    
+		 // Create a new StudentClass object and insert it into the database
+		    StudentClass insertedStudentIntoClass = new StudentClass(currentClassID, studentID, midScore, finalScore);
+		    try {
+		        JDBCStudentClassUtils.insert(insertedStudentIntoClass);
+		        JOptionPane.showMessageDialog(null, resourceBundle.getString("enrolment_insert_OK"));
+		        dispose();
+		    } catch (Exception ex) {
+		        JOptionPane.showMessageDialog(null, resourceBundle.getString("enrolment_error_inserting") + " " + ex.getMessage());
+		        ex.printStackTrace();
+		    }
+		}
+		    
+		
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			
+			
+		}
+		
+	}
+}

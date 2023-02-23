@@ -1,0 +1,58 @@
+package screen;
+
+import java.awt.EventQueue;
+import java.awt.Toolkit;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+
+public class UpdateStudentClassScreen extends JFrame {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private int studentClassID;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					UpdateStudentClassScreen frame = new UpdateStudentClassScreen(0);
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public UpdateStudentClassScreen(int classID) {
+		studentClassID = classID;
+		setTitle("Update Student in class: " + classID);
+		setIconImage(Toolkit.getDefaultToolkit().getImage(InsertScreen.class.getResource("/images/ant english.jpg")));
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 568, 271);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblName = new JLabel("Class Name");
+		lblName.setHorizontalAlignment(SwingConstants.CENTER);
+		lblName.setBounds(10, 11, 100, 20);
+		contentPane.add(lblName);
+	}
+
+}

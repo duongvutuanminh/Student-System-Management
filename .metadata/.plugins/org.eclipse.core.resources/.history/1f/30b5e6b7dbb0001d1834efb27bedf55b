@@ -1,0 +1,46 @@
+package excel_operator;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import jbdc_connection.JDBCSStudentUtils;
+import student.Student;
+
+public class ExcelReader {
+	public static void readStudentsToDatabase(File inputFile) { 
+		try (FileInputStream file = new FileInputStream(inputFile)) {
+	        XSSFWorkbook workbook = new XSSFWorkbook(file);
+	        XSSFSheet sheet = workbook.getSheetAt(0);
+	        List<Student> students = new ArrayList<>();
+	        for (int i = 1; i <= sheet.getPhysicalNumberOfRows(); i++) {
+	            Row row = sheet.getRow(i);
+	            if (row != null && row.getCell(0) != null) {
+	            	Student stu = new Student();
+		            stu.setName(row.getCell(0).toString());
+		            stu.setGender(row.getCell(1).toString() == "Male" ? 0 : 1);
+		            stu.setYob(Integer.parseInt(row.getCell(2).toString()));
+		            stu.setContactNumber(row.getCell(3).toString());
+		            stu.setEnglishName(row.getCell(4).toString());
+		            stu.setParentName(row.getCell(5).toString());
+		            stu.setParentNumber(row.getCell(6).toString());
+		            students.add(stu);	
+	            }
+//	        Iterator<Row> rowIterator = sheet.iterator();
+//	        while (rowIterator.hasNext()) {
+//	        	Row row = rowIterator.next();
+//	        	List<Student> students = new ArrayList<>();
+	        	
+	        }
+	        JDBCSStudentUtils.insert(students);
+	        workbook.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+}

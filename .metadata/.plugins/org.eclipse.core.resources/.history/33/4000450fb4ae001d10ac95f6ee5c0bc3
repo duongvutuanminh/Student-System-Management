@@ -1,0 +1,530 @@
+package screen;
+
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+
+import decor.RoundedBorder;
+import jbdc_connection.JDBCStudentClassUtils;
+import student_class.StudentClass;
+
+public class StudentClassScreen extends JFrame {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private int[] selectedRows;
+	private JTable studentClassTable;
+	private int studentClassID;
+	private JLabel lblNewLabel;
+	private JButton updateBtn;
+	private int currentEnrolmentNo;
+
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					StudentClassScreen frame = new StudentClassScreen(0);
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public StudentClassScreen(int studentClassID) {
+		selectedRows = new int[] {};
+		this.studentClassID = studentClassID;
+		currentEnrolmentNo = -1;
+		
+		setTitle("ANT Management System");
+		setIconImage(Toolkit.getDefaultToolkit().getImage(StudentScreen.class.getResource("/images/ant english.jpg")));
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 1200, 700);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.setFont(new Font("Rockwell", Font.PLAIN, 15));
+		UIManager.put("Menu.font", new Font("sans-serif", Font.PLAIN, 18));
+		setJMenuBar(menuBar);
+		
+		JMenu studentBtn = new JMenu("Student");
+		studentBtn.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				if (e.getButton() == MouseEvent.BUTTON1) { 
+					try {
+						dispose();
+						StudentScreen studentScreen = new StudentScreen();
+						studentScreen.setVisible(true);
+					} catch (Exception error) {
+						// TODO: handle exception
+						error.printStackTrace();
+					}
+				}
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		menuBar.add(studentBtn);
+		
+		JMenu classBtn = new JMenu("Class");
+		classBtn.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+			    // TODO Auto-generated method stub
+			    try {
+			        if (e.getButton() == MouseEvent.BUTTON1) {
+			            dispose();
+			            ClassScreen classScreen = new ClassScreen();
+			            classScreen.setVisible(true);
+			        }
+			    } catch (Exception error) {
+			        error.printStackTrace();
+			    }
+			}
+
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		menuBar.add(classBtn);
+		
+		JMenu teacherBtn = new JMenu("Teacher");
+		menuBar.add(teacherBtn);
+		
+		JMenu libraryBtn = new JMenu("Library");
+		menuBar.add(libraryBtn);
+		
+		JMenu exitBtn = new JMenu("Exit");
+		exitBtn.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				if (e.getButton() == MouseEvent.BUTTON1) { 
+					try {
+						dispose();
+					} catch (Exception error) {
+						// TODO: handle exception
+						error.printStackTrace();
+					}
+				}
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		menuBar.add(exitBtn);
+		
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		lblNewLabel = new JLabel("Student Management System - Enrolment of Class: " + studentClassID);
+		lblNewLabel.setForeground(new Color(244, 164, 96));
+		lblNewLabel.setFont(new Font("Sylfaen", Font.PLAIN, 34));
+		lblNewLabel.setBounds(10, 0, 931, 56);
+		contentPane.add(lblNewLabel);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(20, 45, 850, 574);
+		contentPane.add(scrollPane);
+		
+		studentClassTable = new JTable();
+		studentClassTable.setCellSelectionEnabled(true);
+		studentClassTable.setBackground(new Color(255, 255, 255));
+		studentClassTable.setBorder(new CompoundBorder());
+		studentClassTable.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+			},
+			new String[] {
+				"Enrolment ID", "Student ID", "Student Name", "Midterm Score", "Finalterm Score"
+			}
+		));
+		
+		scrollPane.setViewportView(studentClassTable);
+		
+		TableColumn[] colArr = {studentClassTable.getColumnModel().getColumn(0),
+				studentClassTable.getColumnModel().getColumn(1),
+				studentClassTable.getColumnModel().getColumn(2),
+				studentClassTable.getColumnModel().getColumn(3),
+				studentClassTable.getColumnModel().getColumn(4),};
+		// creating the Centering properties
+		DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();  
+        dtcr.setHorizontalAlignment(SwingConstants.CENTER);
+		for (TableColumn col : colArr) {
+	        col.setCellRenderer(dtcr);
+		}
+		
+		studentClassTable.setRowSelectionAllowed(true);
+		//show data
+		
+		//testing purpose
+//		showData(JDBCStudentClassUtils.findAll(152));
+		//
+		
+		showData(JDBCStudentClassUtils.findAll(studentClassID));
+		ListSelectionModel selectionModel = studentClassTable.getSelectionModel();
+		selectionModel.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+		selectionModel.addListSelectionListener(new ListSelectionListener() {
+		    public void valueChanged(ListSelectionEvent e) {
+		        if (!e.getValueIsAdjusting()) {
+		            selectedRows = studentClassTable.getSelectedRows();
+		            System.out.println("Selected rows: " + Arrays.toString(selectedRows));
+		            List<StudentClass> studentClassList = JDBCStudentClassUtils.findAll(studentClassID);
+		            if (selectedRows.length == 1) {
+		            	StudentClass studentInClass = studentClassList.get(selectedRows[0]);
+		            	currentEnrolmentNo = studentInClass.getEnrolment_number();
+		            	updateBtn.setText("UPDATE: " + currentEnrolmentNo);
+		            }
+		            else {
+		            	updateBtn.setText("UPDATE");
+		            	currentEnrolmentNo = -1;
+		            }
+		        }
+		    }
+		});
+		
+		JButton deleteBtn = new JButton("DELETE");
+		deleteBtn.addMouseListener(new deleteListener());
+		deleteBtn.setBounds(960, 579, 218, 40);
+		deleteBtn.setBorder(new RoundedBorder(15));
+		contentPane.add(deleteBtn);
+		
+		JButton refreshBtn = new JButton("");
+		refreshBtn.addMouseListener(new refreshListener());
+		refreshBtn.setIcon(new ImageIcon(StudentScreen.class.getResource("/images/Button-Refresh-icon.png")));
+		refreshBtn.setBounds(870, 44, 71, 40);
+		refreshBtn.setBorder(new RoundedBorder(15));
+		contentPane.add(refreshBtn);
+		
+		updateBtn = new JButton("UPDATE");
+		updateBtn.addMouseListener(new updateListener());
+		updateBtn.setBounds(960, 528, 218, 40);
+		updateBtn.setBorder(new RoundedBorder(15));
+		contentPane.add(updateBtn);
+		
+		JButton insertBtn = new JButton("INSERT");
+		insertBtn.addMouseListener(new insertListener());
+		insertBtn.setBorder(new RoundedBorder(15));
+		insertBtn.setBounds(960, 477, 218, 40);
+		contentPane.add(insertBtn);
+	}
+
+	public void showData(List<StudentClass> studentClassList) {
+		DefaultTableModel tableModel = (DefaultTableModel) studentClassTable.getModel();
+		tableModel.setRowCount(0);
+		studentClassList.forEach((studentClass) -> {
+			String studentName = JDBCStudentClassUtils.findNameWithID(studentClass.getStudent_id());
+			tableModel.addRow(new Object[] {
+					studentClass.getEnrolment_number(),
+					studentClass.getStudent_id(),
+					studentName,
+					studentClass.getMidterm_test(),
+					studentClass.getFinalterm_test(),
+			});
+		});
+	}
+	
+	private class deleteListener implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			if (e.getButton() == MouseEvent.BUTTON1) {
+				try {
+					if (selectedRows.length == 0) {
+						JOptionPane.showMessageDialog(null, "You must select row(s) before deleting from database", 
+								"Error", JOptionPane.ERROR_MESSAGE);
+					}
+					else {
+						int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete the selected class(s)?",
+		                        "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+						if (result == JOptionPane.YES_OPTION) {
+						   //delete student(s)
+						   List<StudentClass> studentClassList = JDBCStudentClassUtils.findAll(studentClassID);
+						   for (int i = 0; i < selectedRows.length; i++) {
+						      StudentClass deletedStudentFromClass = studentClassList.get(selectedRows[i]);
+						      JDBCStudentClassUtils.delete(deletedStudentFromClass);
+						   }
+						   showData(JDBCStudentClassUtils.findAll(studentClassID));
+						}
+					}
+				} catch (Exception error) {
+					// TODO: handle exception
+					error.printStackTrace();
+				}
+			}
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+	}
+	
+	private class refreshListener implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			if (e.getButton() == MouseEvent.BUTTON1) { 
+				try {
+					showData(JDBCStudentClassUtils.findAll(studentClassID));
+				} catch (Exception error) {
+					// TODO: handle exception
+					error.printStackTrace();
+				}
+			}
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+	}
+	
+	private class updateListener implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			try {
+				if (currentEnrolmentNo != -1) {
+					UpdateStudentClassScreen updateRosterScreen = new UpdateStudentClassScreen(currentEnrolmentNo);
+					updateRosterScreen.setVisible(true);
+					updateRosterScreen.addWindowListener(new WindowAdapter() {
+						  @Override
+						  public void windowClosed(WindowEvent e) {
+						    showData(JDBCStudentClassUtils.findAll(studentClassID));
+						  }
+						});
+				}
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+	}
+	
+	private class insertListener implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			try {
+				InsertStudentClassScreen rosterFrame = new InsertStudentClassScreen(studentClassID);
+				rosterFrame.setVisible(true);
+				rosterFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				rosterFrame.addWindowListener(new WindowAdapter() {
+					  @Override
+					  public void windowClosed(WindowEvent e) {
+					    showData(JDBCStudentClassUtils.findAll(studentClassID));
+					  }
+					});
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+	}
+}

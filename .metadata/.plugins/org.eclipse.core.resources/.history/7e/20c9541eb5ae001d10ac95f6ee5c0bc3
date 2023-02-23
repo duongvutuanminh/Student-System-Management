@@ -1,0 +1,183 @@
+package screen;
+
+import java.awt.EventQueue;
+import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+
+import decor.RoundedBorder;
+import jbdc_connection.JDBCClassUtils;
+import jbdc_connection.JDBCSStudentUtils;
+import student_class.StudentClass;
+
+public class UpdateStudentClassScreen extends JFrame {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private StudentClass currentStudentClass;
+	private JTextField textField;
+	private JTextField textField_1;
+	private JLabel lblMidtermScore;
+	private JTextField textField_3;
+	private JLabel lblFinaltermScore;
+	private JTextField textField_4;
+	private JTextField textField_5;
+	private JTextField textField_6;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					UpdateStudentClassScreen frame = new UpdateStudentClassScreen(null);
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public UpdateStudentClassScreen(StudentClass currentStudentClass) {
+		this.currentStudentClass = currentStudentClass;
+		setTitle("Insert Student into Class: " + currentStudentClass.getClass_id());
+		setIconImage(Toolkit.getDefaultToolkit().getImage(InsertScreen.class.getResource("/images/ant english.jpg")));
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 568, 271);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblName = new JLabel("Class Name");
+		lblName.setHorizontalAlignment(SwingConstants.CENTER);
+		lblName.setBounds(10, 11, 107, 20);
+		contentPane.add(lblName);
+		
+		textField = new JTextField();
+		textField.setHorizontalAlignment(SwingConstants.CENTER);
+		textField.setBounds(127, 11, 182, 20);
+		textField.setText(JDBCClassUtils.findByID(Integer.toString(currentStudentClass.getClass_id())).getClassName());
+		textField.setEditable(false);
+		contentPane.add(textField);
+		textField.setColumns(10);
+		
+		JLabel lblStudentName = new JLabel("Student Name");
+		lblStudentName.setHorizontalAlignment(SwingConstants.CENTER);
+		lblStudentName.setBounds(10, 48, 107, 20);
+		contentPane.add(lblStudentName);
+		
+		textField_1 = new JTextField();
+		textField_1.setHorizontalAlignment(SwingConstants.CENTER);
+		textField_1.setColumns(10);
+		textField_1.setBounds(127, 48, 182, 20);
+		textField_1.setText(JDBCSStudentUtils.findByID(Integer.toString(currentStudentClass.getStudent_id())).getName());
+		contentPane.add(textField_1);
+		
+		lblMidtermScore = new JLabel("Midterm Score");
+		lblMidtermScore.setHorizontalAlignment(SwingConstants.CENTER);
+		lblMidtermScore.setBounds(10, 79, 107, 20);
+		contentPane.add(lblMidtermScore);
+		
+		textField_3 = new JTextField();
+		textField_3.setHorizontalAlignment(SwingConstants.CENTER);
+		textField_3.setColumns(10);
+		textField_3.setBounds(127, 79, 182, 20);
+		textField_3.setText(Integer.toString(currentStudentClass.getMidterm_test()));
+		contentPane.add(textField_3);
+		
+		lblFinaltermScore = new JLabel("Finalterm Scrore");
+		lblFinaltermScore.setHorizontalAlignment(SwingConstants.CENTER);
+		lblFinaltermScore.setBounds(10, 110, 107, 20);
+		contentPane.add(lblFinaltermScore);
+		
+		textField_4 = new JTextField();
+		textField_4.setHorizontalAlignment(SwingConstants.CENTER);
+		textField_4.setColumns(10);
+		textField_4.setBounds(127, 110, 182, 20);
+		textField_3.setText(Integer.toString(currentStudentClass.getFinalterm_test()));
+		contentPane.add(textField_4);
+		
+		JButton btnInsertButton = new JButton("INSERT");
+		btnInsertButton.setBounds(354, 155, 192, 38);
+		btnInsertButton.setBorder(new RoundedBorder(15));
+		btnInsertButton.addMouseListener(new UpdateListener());
+		contentPane.add(btnInsertButton);
+		
+		JLabel lblClassID = new JLabel("Class ID");
+		lblClassID.setHorizontalAlignment(SwingConstants.LEFT);
+		lblClassID.setBounds(319, 11, 60, 20);
+		contentPane.add(lblClassID);
+		
+		textField_5 = new JTextField();
+		textField_5.setHorizontalAlignment(SwingConstants.CENTER);
+		textField_5.setColumns(10);
+		textField_5.setText(Integer.toString(currentStudentClass.getClass_id()));
+		textField_5.setEditable(false);
+		textField_5.setBounds(395, 11, 151, 20);
+		contentPane.add(textField_5);
+		
+		JLabel lblStudentID = new JLabel("Student ID");
+		lblStudentID.setHorizontalAlignment(SwingConstants.LEFT);
+		lblStudentID.setBounds(319, 48, 66, 20);
+		contentPane.add(lblStudentID);
+		
+		textField_6 = new JTextField();
+		textField_6.setHorizontalAlignment(SwingConstants.CENTER);
+		textField_6.setColumns(10);
+		textField_6.setBounds(395, 48, 151, 20);
+		textField_6.setText(Integer.toString(currentStudentClass.getStudent_id()));
+		contentPane.add(textField_6);
+	}
+
+	
+	private class UpdateListener implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+	}
+}

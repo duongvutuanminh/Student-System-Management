@@ -2,7 +2,7 @@ package data_population;
 
 import java.util.Random;
 
-import jbdc_connection.JDBCUtils;
+import jbdc_connection.JDBCSStudentUtils;
 import student.Student;
 
 public class PopulateData {
@@ -29,14 +29,14 @@ public class PopulateData {
             return;
         }
         
-        System.out.printf("Data received:\nNumber of instance: %d\nPopulate from start: %b\n", instanceNumber, originalPopulate);
+        System.out.printf("Data received!\nNumber of instance: %d\nPopulate from start: %b\n", instanceNumber, originalPopulate);
         startPopulating(instanceNumber, originalPopulate);
         System.out.println("Injecting succeed!");
     }
 
 	private static void startPopulating(int instanceNumber, boolean originalPopulate) {
 		if (originalPopulate == true) {
-			JDBCUtils.deleteAll();
+			JDBCSStudentUtils.deleteAll();
 		}
 		
 		Random random = new Random();
@@ -66,7 +66,7 @@ public class PopulateData {
 	        String contactNumber = "09" + random.nextInt(100000000);
 	        String parentNumber = "09" + random.nextInt(100000000);
 	        Student student = new Student(vietnamName, gender, yob, contactNumber, parentName, parentNumber, englishName);
-	        JDBCUtils.insert(student);
+	        JDBCSStudentUtils.insert(student);
 	    }
 	}
 }

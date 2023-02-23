@@ -1,0 +1,742 @@
+package screen;
+
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+
+import classroom.Classroom;
+import decor.RoundedBorder;
+import jbdc_connection.JDBCClassUtils;
+import jbdc_connection.JDBCTeacherUtils;
+
+public class ClassScreen extends JFrame {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JTable classTable;
+	private JTextField classNameInput;
+	private JTextField classIDInput;
+	private JButton classInfoBtn;
+	private int classInfoNumber;
+	private int[] selectedRows;
+	List<Classroom> currentClassList;
+	private Locale language;
+	private static ResourceBundle resourceBundle;
+	private JRadioButton VIRadioSelector;
+	private JRadioButton ENRadioSelector;
+	private ButtonGroup languageSelector;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					ClassScreen frame = new ClassScreen(new Locale("vi", "VN"));
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public ClassScreen(Locale interLocale) {
+		selectedRows = new int[] {};
+		language = interLocale;
+		
+		if (language.toString().equalsIgnoreCase("en_US")) {
+			Locale.setDefault(new Locale("en", "US"));
+		}
+		else {
+			Locale.setDefault(new Locale("vi", "VN"));
+		}
+		resourceBundle = ResourceBundle.getBundle("resource_bundle_configs/resource_bundle");
+		classInfoNumber = 0;
+		
+		setTitle(resourceBundle.getString("screen_title"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(StudentScreen.class.getResource("/images/ant english.jpg")));
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 1200, 700);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.setFont(new Font("Rockwell", Font.PLAIN, 15));
+		UIManager.put("Menu.font", new Font("sans-serif", Font.PLAIN, 18));
+		setJMenuBar(menuBar);
+		
+		JMenu studentBtn = new JMenu(resourceBundle.getString("student_button_title"));
+		studentBtn.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				
+				if (e.getButton() == MouseEvent.BUTTON1) { 
+					try {
+						dispose();
+						StudentScreen studentScreen = new StudentScreen(language);
+						studentScreen.setVisible(true);
+					} catch (Exception error) {
+						
+						error.printStackTrace();
+					}
+				}
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				
+				
+			}
+			
+		});
+		menuBar.add(studentBtn);
+		
+		JMenu classBtn = new JMenu(resourceBundle.getString("class_button_title"));
+		menuBar.add(classBtn);
+		
+		JMenu exitBtn = new JMenu(resourceBundle.getString("exit_button_title"));
+		exitBtn.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				
+				if (e.getButton() == MouseEvent.BUTTON1) { 
+					try {
+						dispose();
+					} catch (Exception error) {
+						
+						error.printStackTrace();
+					}
+				}
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				
+				
+			}
+		});
+		menuBar.add(exitBtn);
+		
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel(resourceBundle.getString("class_screen_big_label"));
+		lblNewLabel.setForeground(new Color(244, 164, 96));
+		lblNewLabel.setFont(new Font("San-serif", Font.PLAIN, 34));
+		lblNewLabel.setBounds(10, 0, 612, 56);
+		contentPane.add(lblNewLabel);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(20, 45, 850, 574);
+		contentPane.add(scrollPane);
+		
+		classTable = new JTable();
+		classTable.setCellSelectionEnabled(true);
+		classTable.setBackground(new Color(255, 255, 255));
+		classTable.setBorder(new CompoundBorder());
+		classTable.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+			},
+			new String[] {
+				resourceBundle.getString("class_row_cid"), 
+				resourceBundle.getString("class_row_name"),
+				resourceBundle.getString("class_row_tid"),
+				resourceBundle.getString("class_row_teacherName"),
+				resourceBundle.getString("class_row_teachday1"),
+				resourceBundle.getString("class_row_teachday2"),
+			}
+		));
+		
+		classTable.getColumnModel().getColumn(0).setPreferredWidth(30);
+		classTable.getColumnModel().getColumn(1).setPreferredWidth(120);
+		classTable.getColumnModel().getColumn(2).setPreferredWidth(30);
+		classTable.getColumnModel().getColumn(3).setPreferredWidth(120);
+		classTable.getColumnModel().getColumn(4).setPreferredWidth(80);
+		classTable.getColumnModel().getColumn(5).setPreferredWidth(80);
+		scrollPane.setViewportView(classTable);
+		
+		TableColumn[] colArr = {classTable.getColumnModel().getColumn(0),
+				classTable.getColumnModel().getColumn(1),
+				classTable.getColumnModel().getColumn(2),
+				classTable.getColumnModel().getColumn(3),
+				classTable.getColumnModel().getColumn(4),
+				classTable.getColumnModel().getColumn(5),};
+		// creating the Centering properties
+		DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();  
+        dtcr.setHorizontalAlignment(SwingConstants.CENTER);
+		for (TableColumn col : colArr) {
+	        col.setCellRenderer(dtcr);
+		}
+		
+		classTable.setRowSelectionAllowed(true);
+		//show data
+		showData(JDBCClassUtils.findAll());
+		ListSelectionModel selectionModel = classTable.getSelectionModel();
+		selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+		selectionModel.addListSelectionListener(new ListSelectionListener() {
+		    public void valueChanged(ListSelectionEvent e) {
+		        if (!e.getValueIsAdjusting()) {
+		            selectedRows = classTable.getSelectedRows();
+		            System.out.println("Selected rows: " + Arrays.toString(selectedRows));
+		            List<Classroom> classList = JDBCClassUtils.findAll();
+		            if (selectedRows.length != 0) {
+		            	Classroom classroomInfo = classList.get(selectedRows[0]);
+			            classInfoBtn.setText(resourceBundle.getString("class_info_btn_with_text") + " "  + classroomInfo.getCid());
+			            classInfoNumber = classroomInfo.getCid();
+		            }
+		            else {
+		            	classInfoBtn.setText(resourceBundle.getString("class_info_button"));
+		            }
+		        }
+		    }
+		});
+		
+		JLabel nameLabel = new JLabel(resourceBundle.getString("class_row_name"));
+		nameLabel.setFont(new Font("Rockwell", Font.PLAIN, 15));
+		nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		nameLabel.setBounds(870, 119, 93, 27);
+		contentPane.add(nameLabel);
+		
+		classNameInput = new JTextField();
+		classNameInput.setBounds(960, 121, 218, 27);
+		contentPane.add(classNameInput);
+		classNameInput.setColumns(10);
+		
+		JButton findBtn = new JButton(resourceBundle.getString("student_find_with_infos"));
+		findBtn.addMouseListener(new findClassListener());
+		findBtn.setBounds(960, 256, 218, 40);
+		findBtn.setBorder(new RoundedBorder(15));
+		contentPane.add(findBtn);
+		
+		JButton deleteBtn = new JButton(resourceBundle.getString("student_delete"));
+		deleteBtn.addMouseListener(new deleteListener());
+		deleteBtn.setBounds(960, 579, 218, 40);
+		deleteBtn.setBorder(new RoundedBorder(15));
+		contentPane.add(deleteBtn);
+		
+		JButton refreshBtn = new JButton("");
+		refreshBtn.addMouseListener(new refreshListener());
+		refreshBtn.setIcon(new ImageIcon(StudentScreen.class.getResource("/images/Button-Refresh-icon.png")));
+		refreshBtn.setBounds(870, 44, 71, 40);
+		refreshBtn.setBorder(new RoundedBorder(15));
+		contentPane.add(refreshBtn);
+		
+		JButton updateBtn = new JButton(resourceBundle.getString("student_update"));
+		updateBtn.addMouseListener(new updateClassListener());
+		updateBtn.setBounds(960, 528, 218, 40);
+		updateBtn.setBorder(new RoundedBorder(15));
+		contentPane.add(updateBtn);
+		
+		classIDInput = new JTextField();
+		classIDInput.setColumns(10);
+		classIDInput.setBounds(960, 159, 218, 27);
+		contentPane.add(classIDInput);
+		
+		JLabel idLabel = new JLabel(resourceBundle.getString("student_id_lbl_find"));
+		idLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		idLabel.setFont(new Font("Rockwell", Font.PLAIN, 15));
+		idLabel.setBounds(889, 157, 61, 27);
+		contentPane.add(idLabel);
+		
+		JButton insertBtn = new JButton(resourceBundle.getString("student_insert"));
+		insertBtn.addMouseListener(new insertClassListener());
+		insertBtn.setBorder(new RoundedBorder(15));
+		insertBtn.setBounds(960, 477, 218, 40);
+		contentPane.add(insertBtn);
+		
+		classInfoBtn = new JButton(resourceBundle.getString("class_info_btn"));
+		classInfoBtn.setBorder(new RoundedBorder(15));
+		classInfoBtn.setBounds(960, 426, 218, 40);
+		classInfoBtn.addMouseListener(new classInfoListener());
+		contentPane.add(classInfoBtn);
+		
+		VIRadioSelector = new JRadioButton("Tiếng Việt");
+		VIRadioSelector.setBounds(960, 48, 109, 23);
+		contentPane.add(VIRadioSelector);
+
+		ENRadioSelector = new JRadioButton("English");
+		ENRadioSelector.setBounds(960, 74, 109, 23);
+		contentPane.add(ENRadioSelector);
+		
+		if (language.toString().equalsIgnoreCase("vi_VN")) {
+			VIRadioSelector.setSelected(true);
+		}
+		else {
+			ENRadioSelector.setSelected(true);
+		}
+		
+		
+		languageSelector = new ButtonGroup();
+		languageSelector.add(VIRadioSelector);
+		languageSelector.add(ENRadioSelector);
+		VIRadioSelector.addMouseListener(new languageSelectionListener());
+		ENRadioSelector.addMouseListener(new languageSelectionListener());
+	}
+	
+	
+	public void showData(List<Classroom> classList) {
+		currentClassList = new ArrayList<Classroom>();
+		currentClassList.addAll(classList);
+		DefaultTableModel tableModel = (DefaultTableModel) classTable.getModel();
+		tableModel.setRowCount(0);
+		classList.forEach((classroom) -> {
+			String day1String = getDayName(classroom.getDay1());
+			String day2String = getDayName(classroom.getDay2());
+			String teacherName = JDBCTeacherUtils.findByID(classroom.getTid()).getTeacherName();
+			tableModel.addRow(new Object[] {
+					classroom.getCid(),
+					classroom.getClassName(),
+					classroom.getTid(),
+					teacherName,
+					day1String,
+					day2String
+			});
+		});
+	}
+	
+	public static String getDayName(int day) {
+        String dayName = "";
+        switch (day-1) {
+            case 1: dayName = resourceBundle.getString("class_day_2"); break;
+            case 2: dayName = resourceBundle.getString("class_day_3"); break;
+            case 3: dayName = resourceBundle.getString("class_day_4"); break;
+            case 4: dayName = resourceBundle.getString("class_day_5"); break;
+            case 5: dayName = resourceBundle.getString("class_day_6"); break;
+            case 6: dayName = resourceBundle.getString("class_day_7"); break;
+            case 7: dayName = resourceBundle.getString("class_day_8"); break;
+            default:dayName = resourceBundle.getString("class_not_valid");
+        }
+
+        return dayName;
+    }
+	
+	private class refreshListener implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			
+			if (e.getButton() == MouseEvent.BUTTON1) { 
+				try {
+					showData(JDBCClassUtils.findAll());
+				} catch (Exception error) {
+					
+					error.printStackTrace();
+				}
+			}
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			
+			
+		}
+	}
+	
+	private class findClassListener implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e){
+			
+			if (e.getButton() == MouseEvent.BUTTON1) {
+				try {
+					String nameInText = classNameInput.getText().strip();
+					int idInText = 0;
+					if (classIDInput.getText().strip() != "") {
+						idInText =  Integer.valueOf(classIDInput.getText().strip());
+					}
+					if (nameInText == "" && idInText == 0) {
+						JOptionPane.showMessageDialog(null, resourceBundle.getString("class_find_warning"), 
+								resourceBundle.getString("error_label"), JOptionPane.ERROR_MESSAGE);
+					}
+					else {
+						if (nameInText == "") { 
+							nameInText = "nothing";
+						}
+						showData(JDBCClassUtils.findClasses(nameInText, idInText));
+					}
+				} catch (Exception error) {
+					
+					error.printStackTrace();
+				}
+			}
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			
+			
+		}
+	}
+	
+	private class deleteListener implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			
+			if (e.getButton() == MouseEvent.BUTTON1) {
+				try {
+					if (selectedRows.length == 0) {
+						JOptionPane.showMessageDialog(null, resourceBundle.getString("class_row_selection"), 
+								resourceBundle.getString("error_label"), JOptionPane.ERROR_MESSAGE);
+					}
+					else {
+						int result = JOptionPane.showConfirmDialog(null, resourceBundle.getString("class_row_delete_confirm"),
+								resourceBundle.getString("class_row_delete_confirm_lbl"), JOptionPane.YES_NO_OPTION);
+						if (result == JOptionPane.YES_OPTION) {
+						   //delete student(s)
+						   List<Classroom> classList = JDBCClassUtils.findAll();
+						   for (int i = 0; i < selectedRows.length; i++) {
+						      Classroom deletedClass = classList.get(selectedRows[i]);
+						      JDBCClassUtils.delete(deletedClass);
+						   }
+						   showData(JDBCClassUtils.findAll());
+						}
+					}
+				} catch (Exception error) {
+					
+					error.printStackTrace();
+				}
+			}
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			
+			
+		}
+	}
+	
+	private class insertClassListener implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			
+			if (e.getButton() == MouseEvent.BUTTON1) {
+				try {
+					InsertClassScreen insertClassScreen = new InsertClassScreen(language);
+					insertClassScreen.setVisible(true);
+					insertClassScreen.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					insertClassScreen.addWindowListener(new WindowAdapter() {
+						  @Override
+						  public void windowClosed(WindowEvent e) {
+						    showData(JDBCClassUtils.findAll());
+						  }
+						});
+				} catch (Exception error) {
+					
+					error.printStackTrace();
+				}
+			}
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			
+			
+		}
+	}
+	
+	private class updateClassListener implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			
+			String classID = JOptionPane.showInputDialog(resourceBundle.getString("class_enter_ID"));
+			if (classID != null && !classID.isEmpty()) {
+			   try {
+			      Classroom cla = JDBCClassUtils.findByID(classID);
+			 
+			      if (cla != null) {
+			         //open update dialog or update student information here
+			    	  System.out.println(resourceBundle.getString("class_updating_stu") + cla.getClassName());
+			    	  UpdateClassScreen updateClassScreen = new UpdateClassScreen(cla, language);
+			    	  updateClassScreen.setVisible(true);
+			    	  updateClassScreen.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			    	  updateClassScreen.addWindowListener(new WindowAdapter() {
+							  @Override
+							  public void windowClosed(WindowEvent e) {
+							    showData(JDBCClassUtils.findAll());
+							  }
+							});
+			      } else {
+			         JOptionPane.showMessageDialog(null, resourceBundle.getString("class_no_class_found") + " " + classID,
+			        		 resourceBundle.getString("error_label"), JOptionPane.ERROR_MESSAGE);
+			      }
+			   } catch (Exception error) {
+			      error.printStackTrace();
+			   }
+			}
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			
+			
+		}
+		
+	}
+	
+	private class classInfoListener implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			
+			if (classInfoNumber != 0) {
+				try {
+					dispose();
+					StudentClassScreen studentClassScreen = new StudentClassScreen(classInfoNumber, language);
+					studentClassScreen.setVisible(true);
+				} catch (Exception e1) {
+					
+					e1.printStackTrace();
+				}
+				
+			}
+			else {
+				JOptionPane.showMessageDialog(null, resourceBundle.getString("class_choose_to_see"),
+						resourceBundle.getString("error_label"), JOptionPane.ERROR_MESSAGE);
+			}
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			
+			
+		}
+		
+	}
+	
+	private class languageSelectionListener implements MouseListener {
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			if (VIRadioSelector.isSelected()) {
+	    		dispose();
+	    		ClassScreen changeLangStudentScreen = new ClassScreen(new Locale("vi", "VN"));
+	    		changeLangStudentScreen.setVisible(true);
+	    		
+	        } else if (ENRadioSelector.isSelected()) {
+	    		dispose();
+	    		ClassScreen changeLangStudentScreen = new ClassScreen(new Locale("en", "US"));
+	    		changeLangStudentScreen.setVisible(true);
+	        }
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+	}
+}

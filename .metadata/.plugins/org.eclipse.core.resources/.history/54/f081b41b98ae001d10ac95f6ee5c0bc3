@@ -1,0 +1,259 @@
+package screen;
+
+import java.awt.EventQueue;
+import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+
+import decor.RoundedBorder;
+import jbdc_connection.JDBCClassUtils;
+import jbdc_connection.JDBCSStudentUtils;
+import jbdc_connection.JDBCStudentClassUtils;
+import student.Student;
+import student_class.StudentClass;
+
+public class InsertStudentClassScreen extends JFrame {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JTextField textField;
+	private JTextField textField_1;
+	private JLabel lblMidtermScore;
+	private JTextField textField_3;
+	private JLabel lblFinaltermScore;
+	private JTextField textField_4;
+	private JTextField textField_5;
+	private JTextField textField_6;
+	private int currentClassID;
+	private Student newlyCreatedStudentID;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					InsertStudentClassScreen frame = new InsertStudentClassScreen(0);
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public InsertStudentClassScreen(int classID) {
+		currentClassID = classID;
+		newlyCreatedStudentID = new Student();
+		setTitle("Insert Student into Class: " + classID);
+		setIconImage(Toolkit.getDefaultToolkit().getImage(InsertScreen.class.getResource("/images/ant english.jpg")));
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 568, 271);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblName = new JLabel("Class Name");
+		lblName.setHorizontalAlignment(SwingConstants.LEFT);
+		lblName.setBounds(31, 11, 60, 20);
+		contentPane.add(lblName);
+		
+		textField = new JTextField();
+		textField.setHorizontalAlignment(SwingConstants.CENTER);
+		textField.setBounds(101, 11, 182, 20);
+		textField.setText(JDBCClassUtils.findByID(Integer.toString(classID)).getClassName());
+		textField.setEditable(false);
+		contentPane.add(textField);
+		textField.setColumns(10);
+		
+		JLabel lblStudentName = new JLabel("Student Name");
+		lblStudentName.setHorizontalAlignment(SwingConstants.CENTER);
+		lblStudentName.setBounds(10, 48, 81, 20);
+		contentPane.add(lblStudentName);
+		
+		textField_1 = new JTextField();
+		textField_1.setHorizontalAlignment(SwingConstants.CENTER);
+		textField_1.setColumns(10);
+		textField_1.setBounds(101, 48, 182, 20);
+		contentPane.add(textField_1);
+		
+		lblMidtermScore = new JLabel("Midterm Score");
+		lblMidtermScore.setHorizontalAlignment(SwingConstants.CENTER);
+		lblMidtermScore.setBounds(10, 79, 81, 20);
+		contentPane.add(lblMidtermScore);
+		
+		textField_3 = new JTextField();
+		textField_3.setHorizontalAlignment(SwingConstants.CENTER);
+		textField_3.setColumns(10);
+		textField_3.setBounds(101, 79, 182, 20);
+		contentPane.add(textField_3);
+		
+		lblFinaltermScore = new JLabel("Finalterm Scrore");
+		lblFinaltermScore.setHorizontalAlignment(SwingConstants.CENTER);
+		lblFinaltermScore.setBounds(10, 110, 81, 20);
+		contentPane.add(lblFinaltermScore);
+		
+		textField_4 = new JTextField();
+		textField_4.setHorizontalAlignment(SwingConstants.CENTER);
+		textField_4.setColumns(10);
+		textField_4.setBounds(101, 110, 182, 20);
+		contentPane.add(textField_4);
+		
+		JButton btnInsertButton = new JButton("INSERT");
+		btnInsertButton.setBounds(354, 155, 192, 38);
+		btnInsertButton.setBorder(new RoundedBorder(15));
+		btnInsertButton.addMouseListener(new insertListener());
+		contentPane.add(btnInsertButton);
+		
+		JLabel lblClassID = new JLabel("Class ID");
+		lblClassID.setHorizontalAlignment(SwingConstants.LEFT);
+		lblClassID.setBounds(309, 11, 60, 20);
+		contentPane.add(lblClassID);
+		
+		textField_5 = new JTextField();
+		textField_5.setHorizontalAlignment(SwingConstants.CENTER);
+		textField_5.setColumns(10);
+		textField_5.setText(Integer.toString(classID));
+		textField_5.setEditable(false);
+		textField_5.setBounds(368, 11, 151, 20);
+		contentPane.add(textField_5);
+		
+		JLabel lblStudentID = new JLabel("Student ID");
+		lblStudentID.setHorizontalAlignment(SwingConstants.LEFT);
+		lblStudentID.setBounds(309, 48, 60, 20);
+		contentPane.add(lblStudentID);
+		
+		textField_6 = new JTextField();
+		textField_6.setHorizontalAlignment(SwingConstants.CENTER);
+		textField_6.setColumns(10);
+		textField_6.setBounds(368, 48, 151, 20);
+		contentPane.add(textField_6);
+	}
+	
+	private class insertListener implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+		    // Get the values from the text fields
+		    String studentName = textField_1.getText().trim();
+		    String studentIDText = textField_6.getText().trim();
+		    String midScoreText = textField_3.getText().trim();
+		    String finalScoreText = textField_4.getText().trim();
+
+		    // Validate the student ID
+		    int studentID = 0;
+		    try {
+		        studentID = Integer.parseInt(studentIDText);
+		    } catch (NumberFormatException ex) {
+		        JOptionPane.showMessageDialog(null, "Student ID must be an integer.");
+		        return;
+		    }
+		    if (studentID <= 0) {
+		        JOptionPane.showMessageDialog(null, "Student ID must be a positive integer.");
+		        return;
+		    }
+
+		    // Validate the scores
+		    int midScore;
+		    int finalScore;
+		    try {
+		        midScore = Integer.parseInt(midScoreText);
+		        finalScore = Integer.parseInt(finalScoreText);
+		    } catch (NumberFormatException ex) {
+		    	midScore = 0;
+		    	finalScore = 0;
+		    }
+		    if (midScore < 0 || midScore > 10 || finalScore < 0 || finalScore > 10) {
+		        JOptionPane.showMessageDialog(null, "Midterm score and final score must be between 0 and 10 inclusive.");
+		        return;
+		    }
+
+		    // Check that student name and ID are not empty
+		    if (studentName.isEmpty() || studentIDText.isEmpty()) {
+		        JOptionPane.showMessageDialog(null, "Please enter both student name and ID.");
+		        return;
+		    }
+
+		    // Check that student name matches the ID in the SQL table
+		    try {
+		        boolean nameMatchesID = JDBCStudentClassUtils.checkStudentNameMatchesID(studentName, studentID);
+		        if (!nameMatchesID) {
+		            JOptionPane.showMessageDialog(null, "Student name does not match the ID in the database.");
+		            int response = JOptionPane.showConfirmDialog(null, "Student ID found, but name does not match. Do you want to create a new student?", "Create New Student?", JOptionPane.YES_NO_OPTION);
+		            if (response == JOptionPane.YES_OPTION) {
+		            	InsertScreen insertNewStudent = new InsertScreen();
+		            	insertNewStudent.setVisible(true);
+		            	insertNewStudent.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		            	insertNewStudent.addWindowListener(new WindowAdapter() {
+							  @Override
+							  public void windowClosed(WindowEvent e) {
+								  newlyCreatedStudentID = JDBCSStudentUtils.findLast();
+							  }
+							});}
+		            return;
+		        }
+		    } catch (Exception ex) {
+		        JOptionPane.showMessageDialog(null, "Error while checking student name and ID: " + ex.getMessage());
+		        ex.printStackTrace();
+		        return;
+		    }
+		    
+		 // Create a new StudentClass object and insert it into the database
+		    StudentClass insertedStudentIntoClass = new StudentClass(currentClassID, studentID, midScore, finalScore);
+		    try {
+		        JDBCStudentClassUtils.insert(insertedStudentIntoClass);
+		        JOptionPane.showMessageDialog(null, "Inserted Successful");
+		        dispose();
+		    } catch (Exception ex) {
+		        JOptionPane.showMessageDialog(null, "Error while inserting student into database: " + ex.getMessage());
+		        ex.printStackTrace();
+		    }
+		}
+		    
+		
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+}

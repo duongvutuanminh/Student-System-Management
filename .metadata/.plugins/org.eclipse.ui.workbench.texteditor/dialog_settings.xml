@@ -1,30 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="age"/>
+		<item key="selection" value=""/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="CLASS_INFO"/>
+			<item value="class_info"/>
+			<item value="system.out"/>
+			<item value="male"/>
+			<item value="Info"/>
+			<item value="Find Class"/>
+			<item value="Find"/>
+			<item value="getStu"/>
+			<item value="round"/>
+			<item value="classTable"/>
+			<item value="studentTable"/>
+			<item value="gender"/>
+			<item value="Btn"/>
 			<item value="age"/>
 			<item value="emptyWarning"/>
-			<item value="empty"/>
-			<item value="empty "/>
-			<item value="male"/>
-			<item value="make"/>
-			<item value="Listener"/>
-			<item value="event"/>
-			<item value="finally"/>
-			<item value="telTextField"/>
-			<item value="idTextField"/>
-			<item value="row"/>
-			<item value="rơư"/>
-			<item value="rơ"/>
-			<item value="findBtn"/>
 		</list>
 		<list key="replacehistory">
+			<item value=""/>
+			<item value="studentClassTable"/>
+			<item value="classTable"/>
 			<item value="telInput"/>
 			<item value="idInput"/>
 			<item value="int"/>

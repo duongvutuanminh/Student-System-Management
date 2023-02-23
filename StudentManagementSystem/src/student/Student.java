@@ -33,6 +33,10 @@ public class Student {
 		this.englishName = englishName;
 	}
 
+	public Student() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getParentName() {
 		return parentName;
 	}
