@@ -1,7 +1,6 @@
 package screen;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
@@ -61,20 +60,20 @@ public class StudentClassScreen extends JFrame {
 
 
 	/**
-	 * Launch the application.
+	 * Launch the application. For testing purpose only.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					StudentClassScreen frame = new StudentClassScreen(0, new Locale("vi", "VN"));
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					StudentClassScreen frame = new StudentClassScreen(0, new Locale("vi", "VN"));
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the frame.

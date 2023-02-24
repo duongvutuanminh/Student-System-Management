@@ -12,7 +12,7 @@ public class PopulateClassData {
 	static int instanceNumber;
     static boolean originalPopulate;
 		
-	public static void main(String[] args) {
+	public static void populateNow(String[] args) {
 		
 		if (args.length != 2) {
             System.out.println("Please provide two arguments: an integer and a boolean.");

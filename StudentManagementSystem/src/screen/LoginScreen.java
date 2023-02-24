@@ -39,9 +39,9 @@ public class LoginScreen extends JFrame {
 	boolean warningDisplay = false;
 
 	/**
-	 * Launch the application.
+	 * Launch the application. For testing purpose only.
 	 */
-	public static void main(String[] args) {
+	public static void start(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -149,7 +149,7 @@ public class LoginScreen extends JFrame {
 			
 			System.out.println("Connect Successful!");
 			try {
-				MessagePane.main(null);
+				MessagePane.displayMessage(null);
 				
 			} catch (Exception ex) {
 				ex.printStackTrace();

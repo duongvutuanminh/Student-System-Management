@@ -8,6 +8,7 @@
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="No student found"/>
 			<item value="CLASS_INFO"/>
 			<item value="class_info"/>
 			<item value="system.out"/>
@@ -22,7 +23,6 @@
 			<item value="gender"/>
 			<item value="Btn"/>
 			<item value="age"/>
-			<item value="emptyWarning"/>
 		</list>
 		<list key="replacehistory">
 			<item value=""/>

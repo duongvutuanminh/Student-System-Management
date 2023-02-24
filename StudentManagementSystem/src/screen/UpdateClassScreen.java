@@ -1,6 +1,5 @@
 package screen;
 
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
@@ -40,20 +39,20 @@ public class UpdateClassScreen extends JFrame {
 	private static ResourceBundle resourceBundle;
 
 	/**
-	 * Launch the application.
+	 * Launch the application. For testing purpose only.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					UpdateClassScreen frame = new UpdateClassScreen(new Classroom(), new Locale("vi", "VN"));
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					UpdateClassScreen frame = new UpdateClassScreen(new Classroom(), new Locale("vi", "VN"));
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the frame.

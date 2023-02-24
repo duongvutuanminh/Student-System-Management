@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="javax.management.timer.Timer"/>
     <fullyQualifiedTypeName name="java.util.Timer"/>
     <fullyQualifiedTypeName name="javax.swing.Timer"/>
     <fullyQualifiedTypeName name="javax.swing.SwingUtilities"/>
@@ -60,4 +59,5 @@
     <fullyQualifiedTypeName name="org.apache.xmlbeans.impl.store.Locale"/>
     <fullyQualifiedTypeName name="java.util.ResourceBundle"/>
     <fullyQualifiedTypeName name="java.util.Locale"/>
+    <fullyQualifiedTypeName name="java.awt.EventQueue"/>
 </qualifiedTypeNameHistroy>

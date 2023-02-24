@@ -1,6 +1,5 @@
 package screen;
 
-import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -41,20 +40,20 @@ public class InsertScreen extends JFrame {
 	private ResourceBundle resourceBundle;
 
 	/**
-	 * Launch the application.
+	 * Launch the application. For testing purpose only.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					InsertScreen frame = new InsertScreen(new Locale("vi", "VN"));
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					InsertScreen frame = new InsertScreen(new Locale("vi", "VN"));
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the frame.
